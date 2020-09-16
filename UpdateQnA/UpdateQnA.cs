@@ -34,13 +34,13 @@ namespace UpdateQnA
                 ? "This HTTP triggered function executed successfully. Pass a QnA pair."
                 : $"Your question, {question}, and the answer {answer}.";
 
-            var authoringKey = "a4827dc9c9f146469010e3457f098495";
+            var authoringKey = "";
             var resourceName = "";
 
-            var authoringUrl = $"https://testmeservice.cognitiveservices.azure.com/";
+            var authoringUrl = $"";
             var queryingUrl = "";
 
-            var kbId = "4adea693-1ef5-4aa5-b3eb-37dc50f7465f";
+            var kbId = "";
 
             var client = new QnAMakerClient(new ApiKeyServiceClientCredentials(authoringKey))
             { 
