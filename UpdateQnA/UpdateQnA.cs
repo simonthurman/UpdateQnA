@@ -34,13 +34,13 @@ namespace UpdateQnA
                 ? "This HTTP triggered function executed successfully. Pass a QnA pair."
                 : $"Your question, {question}, and the answer {answer}.";
 
-            var authoringKey = "";
+            var authoringKey = "a4827dc9c9f146469010e3457f098495";
             var resourceName = "";
 
-            var authoringUrl = $"";
+            var authoringUrl = $"https://testmeservice.cognitiveservices.azure.com/";
             var queryingUrl = "";
 
-            var kbId = "";
+            var kbId = "4adea693-1ef5-4aa5-b3eb-37dc50f7465f";
 
             var client = new QnAMakerClient(new ApiKeyServiceClientCredentials(authoringKey))
             { 
@@ -55,9 +55,11 @@ namespace UpdateQnA
                         new QnADTO{
                             Questions = new List<string>
                             {
-                                req.Query["question"]
+                                //req.Query["question"]
+                                question
                             },
-                            Answer = req.Query["answer"],
+                            //Answer = req.Query["answer"],
+                            Answer = answer,
                             Metadata = new List<MetadataDTO>
                             {
                                 new MetadataDTO {Name = "Category", Value = "TeamStatus"}
