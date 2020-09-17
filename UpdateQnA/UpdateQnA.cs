@@ -32,21 +32,33 @@ namespace UpdateQnA
 
             string responseMessage = string.IsNullOrEmpty(question)
                 ? "This HTTP triggered function executed successfully. Pass a QnA pair."
-                : $"Your question, {question}, and the answer {answer}.";
+                : $"Your question {question}, and the answer {answer}.";
 
-            var authoringKey = "a4827dc9c9f146469010e3457f098495";
-            var resourceName = "";
-
-            var authoringUrl = $"https://testmeservice.cognitiveservices.azure.com/";
-            var queryingUrl = "";
-
-            var kbId = "4adea693-1ef5-4aa5-b3eb-37dc50f7465f";
+            var authoringKey = "";
+            var sourceFile = "";
+            var authoringUrl = $"";
+            var kbId = "";
 
             var client = new QnAMakerClient(new ApiKeyServiceClientCredentials(authoringKey))
             { 
                 Endpoint = authoringUrl 
             };
 
+            //Delete Source File
+            List<string> toDelete = new List<string>();
+
+            toDelete.Add(sourceFile);
+
+            var updateDelete = await client.Knowledgebase.UpdateAsync(kbId, new UpdateKbOperationDTO
+            {
+                Add = null,
+                Update = null,
+                Delete = new UpdateKbOperationDTODelete(null, toDelete)
+            });
+
+            updateDelete = await MonitorOperation(client, updateDelete);
+
+            //Update Knowledge Base
             var updateKB = await client.Knowledgebase.UpdateAsync(kbId, new UpdateKbOperationDTO
             {
                 Add = new UpdateKbOperationDTOAdd
@@ -55,14 +67,13 @@ namespace UpdateQnA
                         new QnADTO{
                             Questions = new List<string>
                             {
-                                //req.Query["question"]
                                 question
                             },
-                            //Answer = req.Query["answer"],
                             Answer = answer,
+                            Source = sourceFile,
                             Metadata = new List<MetadataDTO>
                             {
-                                new MetadataDTO {Name = "Category", Value = "TeamStatus"}
+                                new MetadataDTO {Name = "Category", Value = sourceFile},
                             }
                         }
                      },
@@ -72,6 +83,7 @@ namespace UpdateQnA
 
             updateKB = await MonitorOperation(client, updateKB);
 
+            //Publish Knowledge Base
             await client.Knowledgebase.PublishAsync(kbId);
 
             return new OkObjectResult(responseMessage);
