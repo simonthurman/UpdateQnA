@@ -44,20 +44,6 @@ namespace UpdateQnA
                 Endpoint = authoringUrl 
             };
 
-            //Delete Source File
-            List<string> toDelete = new List<string>();
-
-            toDelete.Add(sourceFile);
-
-            var updateDelete = await client.Knowledgebase.UpdateAsync(kbId, new UpdateKbOperationDTO
-            {
-                Add = null,
-                Update = null,
-                Delete = new UpdateKbOperationDTODelete(null, toDelete)
-            });
-
-            updateDelete = await MonitorOperation(client, updateDelete);
-
             //Update Knowledge Base
             var updateKB = await client.Knowledgebase.UpdateAsync(kbId, new UpdateKbOperationDTO
             {
